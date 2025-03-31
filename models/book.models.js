@@ -27,6 +27,7 @@ const bookSchema = new mongoose.Schema(
           "Romance",
           "Historical",
           "Biography",
+          "Autobiography",
           "Business",
           "Self-help",
           "Other",
