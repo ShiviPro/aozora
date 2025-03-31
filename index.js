@@ -163,6 +163,37 @@ app.post("/books/:bookId", async (req, res) => {
   }
 });
 
+const updateBookByTitle = async (bookTitle, updateData) => {
+  try {
+    const updatedBook = await Book.findOneAndUpdate(
+      { title: bookTitle },
+      updateData,
+      {
+        new: true,
+      }
+    );
+    return updatedBook;
+  } catch (error) {
+    console.log("Error updating book:", error);
+  }
+};
+
+app.post("/books/title/:bookTitle", async (req, res) => {
+  try {
+    const bookTitle = req.params.bookTitle;
+    const updateData = req.body;
+    const updatedBook = await updateBookByTitle(bookTitle, updateData);
+    updatedBook
+      ? res.json({
+          message: "Book updated successfully.",
+          updatedBook: updatedBook,
+        })
+      : res.status(404).json({ error: "Book does not exist!" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update book!" });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("Server running on port", PORT);
