@@ -136,6 +136,33 @@ app.get("/books/publishedYear/:publishedYear", async (req, res) => {
   }
 });
 
+const updateBookById = async (bookId, updateData) => {
+  try {
+    const updatedBook = await Book.findByIdAndUpdate(bookId, updateData, {
+      new: true,
+    });
+    return updatedBook;
+  } catch (error) {
+    console.log("Error updating the book:", error);
+  }
+};
+
+app.post("/books/:bookId", async (req, res) => {
+  try {
+    const bookId = req.params.bookId;
+    const updateData = req.body;
+    const updatedBook = await updateBookById(bookId, updateData);
+    updatedBook
+      ? res.json({
+          message: "Book updated successfully.",
+          updatedBook: updatedBook,
+        })
+      : res.status(404).json({ error: "Book does not exist!" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update book!" });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("Server running on port", PORT);
