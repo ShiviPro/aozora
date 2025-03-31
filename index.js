@@ -73,6 +73,27 @@ app.get("/books/:bookTitle", async (req, res) => {
   }
 });
 
+const readBooksByAuthor = async (authorName) => {
+  try {
+    const desiredBooks = await Book.find({ author: authorName });
+    return desiredBooks;
+  } catch (error) {
+    throw error;
+  }
+};
+
+app.get("/books/author/:authorName", async (req, res) => {
+  try {
+    const authorName = req.params.authorName;
+    const books = await readBooksByAuthor(authorName);
+    books.length > 0
+      ? res.json(books)
+      : res.status(404).json({ error: "No book found!" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to get books!" });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("Server running on port", PORT);
