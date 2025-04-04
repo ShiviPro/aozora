@@ -7,7 +7,11 @@ const cors = require("cors");
 initialiseDatabase();
 const app = express();
 app.use(express.json());
-app.use(cors());
+const corsOptions = {
+  origin: "*",
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 const createBook = async (bookData) => {
   try {
